@@ -46,7 +46,7 @@ function ProductsMenu({ mobile = false, active = false, onNavigate }: { mobile?:
       المنتجات <ChevronDown aria-hidden="true" />
     </button>
     {open && <div className="products-dropdown" role="menu" aria-label="أقسام المنتجات">
-      {productCategories.map(category => <a target="_top" key={category.href} href={category.href} role="menuitem" onClick={() => { setOpen(false); onNavigate?.(); }}>
+      {productCategories.map(category => <a target="_top" key={category.href} href={category.href} role="menuitem">
         <span><strong>{category.name}</strong><small>{category.description}</small></span><ChevronLeft aria-hidden="true" />
       </a>)}
     </div>}
@@ -73,9 +73,9 @@ export function SiteHeader({ active = "home" }: { active?: SitePage }) {
       </div>
     </div>
     {mobileMenu && <nav className="mobile-nav lg:hidden" aria-label="التنقل الرئيسي للهاتف">
-      <a target="_top" className={resolvedActive === "home" ? "mobile-nav--active" : ""} href="/" aria-current={resolvedActive === "home" ? "page" : undefined} onClick={() => setMobileMenu(false)}>الرئيسية</a>
+      <a target="_top" className={resolvedActive === "home" ? "mobile-nav--active" : ""} href="/" aria-current={resolvedActive === "home" ? "page" : undefined}>الرئيسية</a>
       <ProductsMenu mobile active={resolvedActive === "products"} onNavigate={() => setMobileMenu(false)} />
-      {navigation.filter(item => item.key !== "home").map(item => <a target="_top" key={item.key} className={resolvedActive === item.key ? "mobile-nav--active" : ""} href={item.href} aria-current={resolvedActive === item.key ? "page" : undefined} onClick={() => setMobileMenu(false)}>{item.label}</a>)}
+      {navigation.filter(item => item.key !== "home").map(item => <a target="_top" key={item.key} className={resolvedActive === item.key ? "mobile-nav--active" : ""} href={item.href} aria-current={resolvedActive === item.key ? "page" : undefined}>{item.label}</a>)}
     </nav>}
   </header>;
 }
