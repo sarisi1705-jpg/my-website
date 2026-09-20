@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { Box, ChevronLeft, CircleGauge, Droplets, Grid2X2, Headphones, PackageCheck, Printer, Search, ShieldCheck, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,11 +55,11 @@ export default function Home() {
 
     <section id="top" className="hero-grid overflow-hidden"><div className="mx-auto grid max-w-[1440px] gap-10 px-4 py-12 sm:px-8 sm:py-16 lg:grid-cols-[1.05fr_.95fr] lg:px-12 lg:py-20"><div className="flex flex-col justify-center">
       <span className="eyebrow"><Sparkles /> حلول متكاملة لمكان عمل أكثر كفاءة</span><h1>حلول الطباعة<br /><span>تبدأ من هنا.</span></h1><p className="hero-copy">اكتشف مجموعة مختارة من الطابعات والأحبار وقطع الصيانة ومستلزمات الطباعة من علامات موثوقة.</p>
-      <div className="hero-search" role="search"><Search aria-hidden="true" /><Input aria-label="ابحث عن منتج" value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث بالاسم، الموديل أو العلامة التجارية..." /><Button asChild><Link href={query ? `/products?q=${encodeURIComponent(query)}` : "/products"}>بحث</Link></Button></div>
+      <div className="hero-search" role="search"><Search aria-hidden="true" /><Input aria-label="ابحث عن منتج" value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث بالاسم، الموديل أو العلامة التجارية..." /><Button asChild><a target="_top" href={query ? `/products?q=${encodeURIComponent(query)}` : "/products"}>بحث</a></Button></div>
       <div className="trust-row"><span><PackageCheck /> منتجات مختارة</span><span><ShieldCheck /> جودة موثوقة</span><span><Headphones /> دعم متخصص</span></div>
     </div><HeroCarousel /></div></section>
 
-    <div className="discovery-layout mx-auto max-w-[1440px] px-4 py-14 sm:px-8 lg:px-12"><section id="categories"><div className="section-heading"><div><span>تصفّح بسهولة</span><h2>الأقسام الرئيسية</h2></div><Link href="/products">عرض جميع المنتجات <ChevronLeft /></Link></div><div className="category-grid">{categories.map(({ name, icon: Icon, note }) => <Link key={name} href={`/products?category=${encodeURIComponent(name)}`} className="category-card"><span><Icon /></span><div><strong>{name}</strong><small>{note}</small></div><ChevronLeft /></Link>)}</div></section><OffersPanel /></div>
+    <div className="discovery-layout mx-auto max-w-[1440px] px-4 py-14 sm:px-8 lg:px-12"><section id="categories"><div className="section-heading"><div><span>تصفّح بسهولة</span><h2>الأقسام الرئيسية</h2></div><a target="_top" href="/products">عرض جميع المنتجات <ChevronLeft /></a></div><div className="category-grid">{categories.map(({ name, icon: Icon, note }) => <a target="_top" key={name} href={`/products?category=${encodeURIComponent(name)}`} className="category-card"><span><Icon /></span><div><strong>{name}</strong><small>{note}</small></div><ChevronLeft /></a>)}</div></section><OffersPanel /></div>
 
     <section id="catalog" className="catalog-section"><div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-8 lg:px-12"><div className="section-heading catalog-heading"><div><span>كتالوج SSPS</span><h2>منتجات مختارة</h2></div><p>بيانات تجريبية قابلة للاستبدال لاحقاً بمنتجاتك الحقيقية.</p></div>
       <div className="filter-bar"><label className="filter-search"><Search /><Input value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث داخل الكتالوج..." /></label><Select value={category} onValueChange={setCategory}><SelectTrigger className="filter-select"><Grid2X2 /><SelectValue /></SelectTrigger><SelectContent>{["الكل", ...categories.map(c => c.name)].map(item => <SelectItem key={item} value={item}>{item === "الكل" ? "كل التصنيفات" : item}</SelectItem>)}</SelectContent></Select><Select value={brand} onValueChange={setBrand}><SelectTrigger className="filter-select"><SelectValue /></SelectTrigger><SelectContent>{brands.map(item => <SelectItem key={item} value={item}>{item === "الكل" ? "كل العلامات" : item}</SelectItem>)}</SelectContent></Select>{(query || brand !== "الكل" || category !== "الكل") && <Button variant="ghost" onClick={reset}>مسح الفلاتر <X /></Button>}<span className="results-count">{filtered.length} منتج</span></div>
