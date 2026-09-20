@@ -46,3 +46,32 @@
   .hero-grid>div{padding-top:2.5rem}
   .hero-search{position:relative;top:auto;left:auto;transform:none;width:100%;margin-top:1.5rem}
 }
+
+
+/* Mobile navigation interaction hardening */
+@media(max-width:1023px){
+  .site-header{position:sticky;top:0;z-index:9999;overflow:visible}
+  .mobile-nav{
+    position:absolute;
+    top:100%;
+    right:0;
+    left:0;
+    z-index:10000;
+    pointer-events:auto;
+    touch-action:manipulation;
+    box-shadow:0 18px 40px #10213d24;
+  }
+  .mobile-nav>a,
+  .mobile-products-trigger,
+  .products-menu--mobile,
+  .products-menu--mobile .products-dropdown,
+  .products-menu--mobile .products-dropdown a{
+    position:relative;
+    z-index:10001;
+    pointer-events:auto;
+    touch-action:manipulation;
+  }
+  .hero-grid,
+  .hero-grid:before,
+  .hero-search{z-index:0}
+}
