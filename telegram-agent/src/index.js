@@ -37,6 +37,48 @@ async function github(env, path) {
   return res.json();
 }
 
+function extractOutputText(response) {
+  if (response.output_text) return response.output_text;
+  const parts = [];
+  for (const item of response.output || []) {
+    for (const content of item.content || []) {
+      if (content.type === "output_text" && content.text) parts.push(content.text);
+    }
+  }
+  return parts.join("\n").trim();
+}
+
+async function askAI(env, userText) {
+  if (!env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
+
+  const res = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-5.6-luna",
+      reasoning: { effort: "low" },
+      max_output_tokens: 700,
+      instructions:
+        "أنت AL Sarisi Agent، مساعد عملي مختصر يتواصل بالعربية بشكل طبيعي. " +
+        "هذه النسخة للتجربة. لا تدّعي تنفيذ تغييرات على GitHub أو Cloudflare ما لم يتم تنفيذها فعليًا. " +
+        "إذا طلب المستخدم تعديلًا على الموقع، اشرح باختصار ما فهمته واطلب منه استخدام الأوامر المتاحة عند الحاجة. " +
+        "لا تعرض أو تطلب الأسرار أو كلمات المرور أو مفاتيح API.",
+      input: userText,
+    }),
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    const msg = data?.error?.message || `OpenAI API failed: ${res.status}`;
+    throw new Error(msg);
+  }
+
+  return extractOutputText(data) || "ما قدرت أطلع رد واضح. جرّب صياغة ثانية.";
+}
+
 function isOwner(env, chatId) {
   if (!env.OWNER_CHAT_ID) return true;
   return String(chatId) === String(env.OWNER_CHAT_ID);
@@ -88,30 +130,41 @@ export default {
       return json({ ok: true });
     }
 
-    if (text === "/start") {
-      const ownerHint = env.OWNER_CHAT_ID
-        ? "تم التعرف عليك كمالك البوت ✅"
-        : `Chat ID الخاص بك هو: ${chatId}\nسنثبّته كمالك في الخطوة التالية.`;
+    try {
+      if (text === "/start") {
+        await sendMessage(
+          env,
+          chatId,
+          "أهلًا بك في AL Sarisi Agent 🤖\n\n✅ Telegram مربوط\n✅ GitHub مربوط\n✅ AI مربوط\n\nالأوامر: /status و /repo\nأو ابعتلي رسالة عادية بالعربي."
+        );
+        return json({ ok: true });
+      }
 
-      await sendMessage(
-        env,
-        chatId,
-        `أهلًا بك في AL Sarisi Agent 🤖\n\n${ownerHint}\n\nالنسخة الأولى متصلة بتيليجرام. الخطوة التالية: GitHub + AI + أوامر الموقع.`
-      );
+      if (text === "/status") {
+        const gh = env.GITHUB_TOKEN ? "✅ GitHub" : "❌ GitHub";
+        const ai = env.OPENAI_API_KEY ? "✅ AI" : "❌ AI";
+        await sendMessage(env, chatId, `✅ Telegram Worker شغال\n${gh}\n${ai}`);
+        return json({ ok: true });
+      }
+
+      if (text === "/repo") {
+        const repo = await github(env, `/repos/${REPO}`);
+        const commits = await github(env, `/repos/${REPO}/commits?per_page=1`);
+        const latest = commits?.[0];
+        await sendMessage(
+          env,
+          chatId,
+          `📦 ${repo.full_name}\n🌿 الفرع: ${repo.default_branch}\n📝 آخر commit: ${latest?.commit?.message || "غير معروف"}`
+        );
+        return json({ ok: true });
+      }
+
+      const answer = await askAI(env, text || "مرحبا");
+      await sendMessage(env, chatId, answer.slice(0, 3900));
+      return json({ ok: true });
+    } catch (error) {
+      await sendMessage(env, chatId, `❌ صار خطأ: ${error?.message || "Unknown error"}`);
       return json({ ok: true });
     }
-
-    if (text === "/status") {
-      await sendMessage(env, chatId, "✅ Telegram Worker شغال.\n⏳ GitHub وAI لسه بنربطهم بالخطوة الجاية.");
-      return json({ ok: true });
-    }
-
-    await sendMessage(
-      env,
-      chatId,
-      `وصلتني رسالتك:\n${text || "(رسالة بدون نص)"}\n\nحاليًا أنا نسخة الاتصال الأولى فقط. قريبًا رح أنفذ مهام GitHub والموقع.`
-    );
-
-    return json({ ok: true });
   },
 };
