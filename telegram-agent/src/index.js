@@ -1,3 +1,5 @@
+const REPO = "sarisi1705-jpg/my-website";
+
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {
     status,
@@ -19,6 +21,20 @@ async function sendMessage(env, chatId, text) {
     chat_id: chatId,
     text,
   });
+}
+
+async function github(env, path) {
+  if (!env.GITHUB_TOKEN) throw new Error("GITHUB_TOKEN is not configured");
+  const res = await fetch(`https://api.github.com${path}`, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
+      "User-Agent": "AL-Sarisi-Agent",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+  if (!res.ok) throw new Error(`GitHub API failed: ${res.status}`);
+  return res.json();
 }
 
 function isOwner(env, chatId) {
