@@ -33,7 +33,6 @@
   // and locally in .dev.vars (see .dev.vars.example).
   "vars": {
     "PUBLIC_SITE_URL": "https://my-website.sarisi1705.workers.dev",
-    // Cloudflare's always-pass test key; replaced with the real site key.
-    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAFCXeCGZbEh14aHf"
   }
 }
