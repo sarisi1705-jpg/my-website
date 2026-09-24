@@ -55,3 +55,9 @@ next-env.d.ts
 
 # TypeScript incremental build cache
 tsconfig.tsbuildinfo
+
+# Playwright saved sessions
+/playwright/.auth/
+
+# Database exports contain customer data
+/backups/

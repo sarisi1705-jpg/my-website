@@ -41,3 +41,15 @@ export async function readJson(request: Request, maxBytes: number): Promise<unkn
     return undefined;
   }
 }
+
+/** Thrown by server logic for expected failures (404, 409, bad input); route wrappers turn it into jsonError. */
+export class HttpError extends Error {
+  constructor(
+    readonly status: number,
+    readonly code: string,
+    message: string,
+    readonly fieldErrors?: Record<string, string>,
+  ) {
+    super(message);
+  }
+}

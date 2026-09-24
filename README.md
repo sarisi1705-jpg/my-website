@@ -32,6 +32,7 @@ The commands below use the short `pnpm …` form. Prefix them with `npx pnpm@11.
 | `pnpm db:migrate:local` / `db:migrate:remote` | Apply migrations to the local or production database |
 | `pnpm cf-typegen` | Regenerate `worker-configuration.d.ts` after changing `wrangler.jsonc` or `.dev.vars` |
 | `pnpm deploy` | Migrate the production database, build, deploy |
+| `pnpm admin:create-owner --local` / `--remote` | Create an owner account, or recover one (resets its password and unlocks it) |
 
 ## Where things live
 
@@ -46,6 +47,23 @@ The commands below use the short `pnpm …` form. Prefix them with `npx pnpm@11.
 | Validation shared by forms and the API | `lib/validation/` |
 | Bindings, vars, rate limits | `wrangler.jsonc` |
 
+## Admin panel
+
+`/admin` is where staff manage the site. Sign-in is email + password (PBKDF2 hashing, database-backed sessions, and a 15-minute lockout after 5 wrong passwords).
+
+| Role | Can |
+|---|---|
+| المالك (owner) | Everything, including staff accounts, permanent deletes and the audit log |
+| محرر المحتوى (editor) | Products, photos, categories, brands |
+| المبيعات (sales) | Quote/contact requests: follow up, assign, add notes, export CSV |
+
+New staff get a temporary password and must choose their own at first sign-in. Every change is recorded in سجل النشاط (the audit log). To create the first owner locally:
+
+```bash
+pnpm db:migrate:local
+pnpm admin:create-owner --local
+```
+
 ## API
 
 All responses have the shape `{ data }` or `{ error: { code, message, fieldErrors? } }`.
@@ -58,6 +76,7 @@ All responses have the shape `{ data }` or `{ error: { code, message, fieldError
 | `GET /api/brands` | Active brands |
 | `POST /api/inquiries` | Quote, service or contact request. Protected by Turnstile, a rate limit and a honeypot field. Staff get a Telegram alert |
 | `GET /api/images/products/:file` | Product images from R2 (cached forever; keys are unique) |
+| `/api/admin/*` | Admin endpoints: auth, stats, inquiries (+ CSV export), products, uploads, categories, brands, users, audit. Each needs a session with the right role; changes also need a same-origin request |
 
 ## Secrets
 
@@ -73,6 +92,8 @@ npx wrangler secret put IP_HASH_SALT
 `TURNSTILE_SITE_KEY` and `PUBLIC_SITE_URL` are public values in `wrangler.jsonc` → `vars`.
 
 ## Deploying
+
+See [docs/OPERATIONS.md](docs/OPERATIONS.md) for first-time setup (database, bucket, Turnstile, Telegram), backups, rollback and account recovery.
 
 ```bash
 npx wrangler login     # once

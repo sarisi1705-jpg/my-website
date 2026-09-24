@@ -11,6 +11,9 @@ rm -rf "$state_dir"
 # Migrations read wrangler.jsonc at the root; the dev server below reads the
 # built config. Both share one database because they share --persist-to.
 CI=1 npx wrangler d1 migrations apply DB --local --persist-to "$state_dir"
+# Test staff accounts (owner/editor/sales) for the admin tests.
+npx tsx tests/e2e/seed-users.ts > "$state_dir/users.sql"
+npx wrangler d1 execute DB --local --persist-to "$state_dir" --file "$state_dir/users.sql"
 node scripts/run-framework.mjs build
 exec npx wrangler dev --config dist/server/wrangler.json --local \
   --persist-to "$state_dir" --env-file "$PWD/tests/e2e/e2e.vars" \

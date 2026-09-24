@@ -8,3 +8,11 @@ export const contactMethods = ["phone", "whatsapp", "email"] as const;
 export type InquiryType = (typeof inquiryTypes)[number];
 export type InquiryStatus = (typeof inquiryStatuses)[number];
 export type ContactMethod = (typeof contactMethods)[number];
+
+export const inquiryStatusLabels: Record<InquiryStatus, string> = {
+  new: "جديد",
+  in_progress: "قيد المتابعة",
+  quoted: "تم إرسال عرض",
+  closed: "مغلق",
+  spam: "مزعج",
+};
