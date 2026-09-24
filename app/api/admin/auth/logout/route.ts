@@ -1,10 +1,16 @@
 import { getDb } from "@/db";
 import { logAudit } from "@/lib/server/audit";
 import { clearedSessionCookie, destroySession, getSessionUser, isSameOrigin, readSessionToken } from "@/lib/server/auth";
-import { jsonData, jsonError } from "@/lib/server/http";
+import { discardBody, jsonData, jsonError } from "@/lib/server/http";
 
 // Not wrapped in adminRoute: signing out must work even with an expired session.
 export async function POST(request: Request) {
+  const response = await handle(request);
+  await discardBody(request);
+  return response;
+}
+
+async function handle(request: Request): Promise<Response> {
   if (!isSameOrigin(request)) return jsonError(403, "bad_origin", "طلب غير مسموح.");
   const token = readSessionToken(request);
   if (token) {

@@ -53,3 +53,12 @@ export class HttpError extends Error {
     super(message);
   }
 }
+
+/**
+ * Consumes an unread request body. Answering early (401/403/429) without
+ * reading the body can stall the next request on the same keep-alive
+ * connection (seen with local wrangler), so early exits call this first.
+ */
+export async function discardBody(request: Request): Promise<void> {
+  if (request.body && !request.bodyUsed) await request.arrayBuffer().catch(() => undefined);
+}

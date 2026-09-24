@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { after } from "next/server";
 import { getDb, type Db } from "@/db";
 import { getPublishedProductById } from "@/lib/server/catalog";
-import { fieldErrorsFrom, jsonData, jsonError, readJson } from "@/lib/server/http";
+import { discardBody, fieldErrorsFrom, jsonData, jsonError, readJson } from "@/lib/server/http";
 import { createInquiry, markInquiryNotified } from "@/lib/server/inquiries";
 import { getClientIp, getUserAgent, hashIp } from "@/lib/server/request-meta";
 import { formatInquiryAlert, sendTelegramMessage } from "@/lib/server/telegram";
@@ -19,6 +19,12 @@ async function resolveProductSnapshot(db: Db, productId: number | undefined): Pr
 }
 
 export async function POST(request: Request) {
+  const response = await handle(request);
+  await discardBody(request);
+  return response;
+}
+
+async function handle(request: Request): Promise<Response> {
   const ip = getClientIp(request);
 
   const { success: withinLimit } = await env.RL_INQUIRY.limit({ key: ip });

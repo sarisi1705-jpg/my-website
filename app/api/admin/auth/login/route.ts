@@ -2,13 +2,19 @@ import { env } from "cloudflare:workers";
 import { getDb } from "@/db";
 import { logAudit } from "@/lib/server/audit";
 import { authenticate, createSession, isSameOrigin, sessionCookie } from "@/lib/server/auth";
-import { fieldErrorsFrom, jsonData, jsonError, readJson } from "@/lib/server/http";
+import { discardBody, fieldErrorsFrom, jsonData, jsonError, readJson } from "@/lib/server/http";
 import { getClientIp, getUserAgent, hashIp } from "@/lib/server/request-meta";
 import { loginInput } from "@/lib/validation/admin";
 
 const NO_STORE = { "cache-control": "no-store" };
 
 export async function POST(request: Request) {
+  const response = await handle(request);
+  await discardBody(request);
+  return response;
+}
+
+async function handle(request: Request): Promise<Response> {
   if (!isSameOrigin(request)) return jsonError(403, "bad_origin", "طلب غير مسموح.", { headers: NO_STORE });
 
   const ip = getClientIp(request);

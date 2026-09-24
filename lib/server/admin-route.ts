@@ -2,7 +2,7 @@ import { getDb } from "@/db";
 import type { Db } from "@/db/types";
 import { can, type Capability } from "@/lib/auth/roles";
 import { getSessionUser, isSameOrigin, readSessionToken, type SessionUser } from "@/lib/server/auth";
-import { fieldErrorsFrom, HttpError, jsonError, readJson } from "@/lib/server/http";
+import { discardBody, fieldErrorsFrom, HttpError, jsonError, readJson } from "@/lib/server/http";
 import type { ZodType, ZodTypeDef } from "zod";
 
 const MUTATING = new Set(["POST", "PUT", "PATCH", "DELETE"]);
@@ -17,6 +17,12 @@ export type AdminContext<P> = { request: Request; db: Db; user: SessionUser; par
  */
 export function adminRoute<P = Record<string, string>>(capability: Capability | "self", handler: (context: AdminContext<P>) => Promise<Response>) {
   return async (request: Request, context?: { params?: Promise<P> }): Promise<Response> => {
+    const response = await run(request, context);
+    await discardBody(request);
+    return response;
+  };
+
+  async function run(request: Request, context?: { params?: Promise<P> }): Promise<Response> {
     try {
       if (MUTATING.has(request.method) && !isSameOrigin(request)) {
         return jsonError(403, "bad_origin", "طلب غير مسموح.", { headers: NO_STORE });
@@ -40,7 +46,7 @@ export function adminRoute<P = Record<string, string>>(capability: Capability | 
       console.error(`[admin] ${request.method} ${new URL(request.url).pathname} failed`, error);
       return jsonError(500, "server_error", "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", { headers: NO_STORE });
     }
-  };
+  }
 }
 
 /** Parses and validates a JSON body, throwing a 400 with field errors when invalid. */
