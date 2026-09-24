@@ -164,6 +164,11 @@ async function handleMessage(ctx: BotContext, message: NonNullable<TelegramUpdat
     return reply(`✅ تم ربط حسابك: ${linked.name} (${roleLabels[linked.role]})\n\n${helpText(linked)}`);
   }
 
+  // Setup helper: the ID to use as TELEGRAM_CHAT_ID for alerts. Not secret, so anyone may ask.
+  if (command === "/id") {
+    return reply(`معرّف هذه المحادثة (TELEGRAM_CHAT_ID):\n${message.chat.id}`);
+  }
+
   const staff = await findStaffByTelegram(ctx.db, message.from.id);
   if (command === "/start" || command === "/help") return reply(helpText(staff));
   if (!staff) return reply(`هذا البوت خاص بفريق SSPS.\n\n${HOW_TO_LINK}`);
@@ -229,5 +234,6 @@ export const botCommands = [
   { command: "r", description: "عرض طلب برقمه" },
   { command: "stats", description: "ملخص الطلبات" },
   { command: "link", description: "ربط حسابك في لوحة التحكم" },
+  { command: "id", description: "معرّف هذه المحادثة" },
   { command: "help", description: "المساعدة" },
 ];

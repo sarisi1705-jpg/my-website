@@ -80,6 +80,11 @@ describe("linking a Telegram account", () => {
     expect((await db.select().from(adminUsers).where(eq(adminUsers.id, first.id)).get())?.telegramUserId).toBeNull();
   });
 
+  it("tells anyone the chat ID with /id, for setting up alerts", async () => {
+    await handleTelegramUpdate(ctx(), message(999, "/id@ssps_bot", "supergroup"));
+    expect(lastText()).toContain("-100");
+  });
+
   it("tells strangers how to link and keeps quiet in groups", async () => {
     await handleTelegramUpdate(ctx(), message(999, "/new"));
     expect(lastText()).toContain("هذا البوت خاص بفريق SSPS");
