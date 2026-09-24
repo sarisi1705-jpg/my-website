@@ -67,13 +67,14 @@ test.describe("quote and contact requests", () => {
 });
 
 test.describe("calls to action", () => {
-  test("the product panel links to a quote request for that product", async ({ page }) => {
+  test("a product page offers a quote form with the product filled in", async ({ page }) => {
     await page.goto("/products");
-    await page.locator(".product-card").first().getByRole("button").click();
-    await page.getByRole("link", { name: "اطلب عرض سعر لهذا المنتج" }).click();
+    await page.locator(".product-card").first().getByRole("link", { name: /عرض تفاصيل/ }).click();
+    await expect(page).toHaveURL(/\/product\/[a-z0-9-]+$/);
+    const name = await page.getByRole("heading", { level: 1 }).innerText();
 
-    await expect(page).toHaveURL(/\/contact\?type=quote&product=\d+/);
-    await expect(page.locator(".inquiry-product")).toBeVisible();
+    await page.getByRole("link", { name: "اطلب عرض سعر" }).click();
+    await expect(page.locator("#quote .inquiry-product strong")).toHaveText(name);
   });
 
   test("the services page asks for a service request", async ({ page }) => {
@@ -84,7 +85,7 @@ test.describe("calls to action", () => {
 });
 
 test.describe("layout", () => {
-  for (const path of ["/", "/products", "/contact", "/services", "/offers"]) {
+  for (const path of ["/", "/products", "/products/printers", "/product/hp-laserjet-pro-4103fdw", "/contact", "/services", "/offers"]) {
     test(`${path} has no horizontal overflow`, async ({ page }) => {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);

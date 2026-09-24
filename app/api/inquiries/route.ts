@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import { after } from "next/server";
-import { getDb } from "@/db";
-import { products } from "@/data/products";
+import { getDb, type Db } from "@/db";
+import { getPublishedProductById } from "@/lib/server/catalog";
 import { fieldErrorsFrom, jsonData, jsonError, readJson } from "@/lib/server/http";
 import { createInquiry, markInquiryNotified } from "@/lib/server/inquiries";
 import { getClientIp, getUserAgent, hashIp } from "@/lib/server/request-meta";
@@ -11,11 +11,11 @@ import { formatInquiryReference, inquiryRequest } from "@/lib/validation/inquiry
 
 const MAX_BODY_BYTES = 16 * 1024;
 
-// Phase 1 bridge: products still live in data/products.ts. Phase 2 swaps this for a DB lookup.
-function resolveProductSnapshot(productId: number | undefined): string | null {
+// Saved with the inquiry so staff see what was asked for even if the product changes later.
+async function resolveProductSnapshot(db: Db, productId: number | undefined): Promise<string | null> {
   if (!productId) return null;
-  const product = products.find(item => item.id === productId);
-  return product ? `${product.name} (${product.brand} ${product.model})` : null;
+  const product = await getPublishedProductById(db, productId);
+  return product ? `${product.name} (${product.brand.name} ${product.model})` : null;
 }
 
 export async function POST(request: Request) {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   try {
     const db = getDb();
     const inquiry = await createInquiry(db, fields, {
-      productSnapshot: resolveProductSnapshot(fields.productId),
+      productSnapshot: await resolveProductSnapshot(db, fields.productId),
       sourcePath: sourcePath ?? null,
       ipHash: await hashIp(ip, env.IP_HASH_SALT ?? ""),
       userAgent: getUserAgent(request),

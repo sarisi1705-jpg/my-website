@@ -1,0 +1,55 @@
+-- Seed: the demo catalog that previously lived in data/products.ts and data/product-categories.ts.
+-- Generated once from those files; edit products in the admin panel from now on.
+INSERT INTO categories (id, slug, name, description, icon_key, sort_order, is_active, created_at, updated_at) VALUES (1, 'printers', 'الطابعات', 'مساحة مخصصة لعرض الطابعات المكتبية والمنزلية وحلول الطباعة المتنوعة.', 'printer', 1, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO categories (id, slug, name, description, icon_key, sort_order, is_active, created_at, updated_at) VALUES (2, 'toners', 'الأحبار والتونر', 'مساحة مخصصة لعرض الأحبار وعبوات التونر المتوافقة مع احتياجات الطباعة.', 'droplets', 2, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO categories (id, slug, name, description, icon_key, sort_order, is_active, created_at, updated_at) VALUES (3, 'parts', 'قطع الصيانة', 'مساحة مخصصة لقطع الغيار والصيانة اللازمة للحفاظ على كفاءة الأجهزة.', 'gauge', 3, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO categories (id, slug, name, description, icon_key, sort_order, is_active, created_at, updated_at) VALUES (4, 'paper', 'الورق ومستلزمات الطباعة', 'مساحة مخصصة للورق والملصقات ومختلف مستلزمات الطباعة اليومية.', 'box', 4, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO categories (id, slug, name, description, icon_key, sort_order, is_active, created_at, updated_at) VALUES (5, 'solutions', 'الأجهزة والحلول', 'مساحة مخصصة للأجهزة والحلول المتكاملة للمكاتب والشركات.', 'wrench', 5, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO brands (id, slug, name, sort_order, is_active, created_at, updated_at) VALUES (1, 'xerox', 'Xerox', 1, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO brands (id, slug, name, sort_order, is_active, created_at, updated_at) VALUES (2, 'epson', 'Epson', 2, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO brands (id, slug, name, sort_order, is_active, created_at, updated_at) VALUES (3, 'hp', 'HP', 3, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO brands (id, slug, name, sort_order, is_active, created_at, updated_at) VALUES (4, 'canon', 'Canon', 4, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO brands (id, slug, name, sort_order, is_active, created_at, updated_at) VALUES (5, 'navigator', 'Navigator', 5, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO brands (id, slug, name, sort_order, is_active, created_at, updated_at) VALUES (6, 'avery', 'Avery', 6, 1, 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (1, 'xerox-versalink-b415', 'طابعة ليزر مكتبية', 'VersaLink B415', 1, 1, 'طابعة أحادية اللون سريعة ومناسبة لمجموعات العمل.', '["طباعة ليزر","اتصال شبكي","طباعة على الوجهين"]', '#2563eb', 1, 'published', 1, 'طابعه ليزر مكتبيه versalink b415 xerox الطابعات طباعه ليزر اتصال شبكي طباعه علي الوجهين طابعه احاديه اللون سريعه ومناسبه لمجموعات العمل.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (2, 'epson-l6290', 'طابعة EcoTank ملونة', 'L6290', 2, 1, 'حل اقتصادي للطباعة اليومية بخزانات حبر قابلة لإعادة التعبئة.', '["ألوان","Wi‑Fi","ماسح ضوئي"]', '#0891b2', 1, 'published', 2, 'طابعه ecotank ملونه l6290 epson الطابعات الوان wi‑fi ماسح ضويي حل اقتصادي للطباعه اليوميه بخزانات حبر قابله لاعاده التعبيه.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (3, 'hp-laserjet-pro-4103fdw', 'طابعة ليزر متعددة الوظائف', 'LaserJet Pro 4103fdw', 3, 1, 'طباعة ومسح ونسخ للمكاتب ذات ضغط العمل المتوسط.', '["متعددة الوظائف","Wi‑Fi","تغذية تلقائية"]', '#4f46e5', 0, 'published', 3, 'طابعه ليزر متعدده الوظايف laserjet pro 4103fdw hp الطابعات متعدده الوظايف wi‑fi تغذيه تلقاييه طباعه ومسح ونسخ للمكاتب ذات ضغط العمل المتوسط.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (4, 'canon-imageprograf-pro-300', 'طابعة صور احترافية', 'imagePROGRAF PRO-300', 4, 1, 'دقة ألوان عالية للمصورين والاستوديوهات.', '["طباعة صور","A3+","اتصال لاسلكي"]', '#7c3aed', 0, 'published', 4, 'طابعه صور احترافيه imageprograf pro-300 canon الطابعات طباعه صور a3+ اتصال لاسلكي دقه الوان عاليه للمصورين والاستوديوهات.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (5, 'xerox-006r04731', 'تونر أسود عالي السعة', '006R04731', 1, 2, 'خرطوشة تونر للاستخدام المكتبي المكثف.', '["أسود","سعة عالية","عبوة واحدة"]', '#1e3a8a', 1, 'published', 5, 'تونر اسود عالي السعه 006r04731 xerox الاحبار والتونر اسود سعه عاليه عبوه واحده خرطوشه تونر للاستخدام المكتبي المكثف.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (6, 'epson-t7741', 'عبوة حبر أسود', 'T7741', 2, 2, 'عبوة حبر أصلية لأنظمة EcoTank المتوافقة.', '["أسود","70 مل","EcoTank"]', '#0f766e', 0, 'published', 6, 'عبوه حبر اسود t7741 epson الاحبار والتونر اسود 70 مل ecotank عبوه حبر اصليه لانظمه ecotank المتوافقه.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (7, 'hp-w2031a', 'تونر LaserJet سماوي', 'W2031A', 3, 2, 'لون ثابت ونتائج واضحة للمستندات والعروض.', '["سماوي","ليزر","خرطوشة أصلية"]', '#0284c7', 0, 'published', 7, 'تونر laserjet سماوي w2031a hp الاحبار والتونر سماوي ليزر خرطوشه اصليه لون ثابت ونتايج واضحه للمستندات والعروض.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (8, 'canon-gi-490-c-m-y', 'حبر PIXMA متعدد الألوان', 'GI-490 C/M/Y', 4, 2, 'طقم عبوات ملونة للطباعة المنزلية والمكتبية.', '["3 ألوان","Inkjet","طقم اقتصادي"]', '#db2777', 0, 'published', 8, 'حبر pixma متعدد الالوان gi-490 c/m/y canon الاحبار والتونر 3 الوان inkjet طقم اقتصادي طقم عبوات ملونه للطباعه المنزليه والمكتبيه.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (9, 'xerox-013r00691', 'وحدة تصوير', '013R00691', 1, 3, 'وحدة تصوير بديلة للحفاظ على جودة الطباعة.', '["قطعة صيانة","عمر طويل","تركيب سهل"]', '#475569', 0, 'published', 9, 'وحده تصوير 013r00691 xerox قطع الصيانه قطعه صيانه عمر طويل تركيب سهل وحده تصوير بديله للحفاظ علي جوده الطباعه.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (10, 'hp-rm2-5392', 'رول تغذية ورق', 'RM2-5392', 3, 3, 'قطعة تغذية بديلة لمجموعة من طابعات LaserJet.', '["قطعة بديلة","مطاط مقوّى","لدرج الورق"]', '#64748b', 0, 'published', 10, 'رول تغذيه ورق rm2-5392 hp قطع الصيانه قطعه بديله مطاط مقوي لدرج الورق قطعه تغذيه بديله لمجموعه من طابعات laserjet.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (11, 'epson-t04d1', 'صندوق صيانة', 'T04D1', 2, 3, 'وحدة تجميع حبر فائض سهلة الاستبدال.', '["صندوق صيانة","تركيب مباشر","Inkjet"]', '#334155', 0, 'published', 11, 'صندوق صيانه t04d1 epson قطع الصيانه صندوق صيانه تركيب مباشر inkjet وحده تجميع حبر فايض سهله الاستبدال.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (12, 'canon-pf-06', 'رأس طباعة', 'PF-06', 4, 3, 'رأس طباعة دقيق لطابعات التنسيق الكبير.', '["دقة عالية","Large format","قطعة أصلية"]', '#374151', 0, 'published', 12, 'راس طباعه pf-06 canon قطع الصيانه دقه عاليه large format قطعه اصليه راس طباعه دقيق لطابعات التنسيق الكبير.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (13, 'navigator-a4-80-gsm', 'ورق تصوير يومي', 'A4 — 80 gsm', 5, 4, 'ورق أبيض ناعم للطباعة والنسخ اليومي.', '["A4","80 gsm","500 ورقة"]', '#f59e0b', 0, 'published', 13, 'ورق تصوير يومي a4 — 80 gsm navigator الورق ومستلزمات الطباعه a4 80 gsm 500 ورقه ورق ابيض ناعم للطباعه والنسخ اليومي.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (14, 'epson-a4-200-gsm', 'ورق صور لامع', 'A4 — 200 gsm', 2, 4, 'سطح لامع للصور والعروض عالية الجودة.', '["لامع","A4","20 ورقة"]', '#ea580c', 0, 'published', 14, 'ورق صور لامع a4 — 200 gsm epson الورق ومستلزمات الطباعه لامع a4 20 ورقه سطح لامع للصور والعروض عاليه الجوده.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (15, 'avery-a4-labels', 'ملصقات ذاتية اللصق', 'A4 Labels', 6, 4, 'صفائح ملصقات متعددة الاستخدامات للطابعات المكتبية.', '["ذاتي اللصق","A4","قص مسبق"]', '#d97706', 0, 'published', 15, 'ملصقات ذاتيه اللصق a4 labels avery الورق ومستلزمات الطباعه ذاتي اللصق a4 قص مسبق صفايح ملصقات متعدده الاستخدامات للطابعات المكتبيه.', 1790208000000, 1790208000000);
+--> statement-breakpoint
+INSERT INTO products (id, slug, name, model, brand_id, category_id, description, specs, color, featured, status, sort_order, search_text, created_at, updated_at) VALUES (16, 'canon-a0-90-gsm', 'ورق رول للبلوتر', 'A0 — 90 gsm', 4, 4, 'رول ورق للمخططات والرسومات الهندسية.', '["A0","90 gsm","طول 50 متر"]', '#ca8a04', 0, 'published', 16, 'ورق رول للبلوتر a0 — 90 gsm canon الورق ومستلزمات الطباعه a0 90 gsm طول 50 متر رول ورق للمخططات والرسومات الهندسيه.', 1790208000000, 1790208000000);

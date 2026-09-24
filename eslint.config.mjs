@@ -23,6 +23,14 @@ const eslintConfig = defineConfig([
       "react-hooks/set-state-in-effect": "off",
     },
   },
+  {
+    rules: {
+      // Plain <a> links on purpose: vinext 1.0.0-beta.5's <Link> throws
+      // "e is not a function" on click in production builds. Every page is
+      // server-rendered, so a full page load is fast. Revisit after upgrading vinext.
+      "@next/next/no-html-link-for-pages": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

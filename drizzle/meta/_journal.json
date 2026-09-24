@@ -8,6 +8,20 @@
       "when": 1790243692212,
       "tag": "0000_inquiries",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790245148620,
+      "tag": "0001_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790245185930,
+      "tag": "0002_seed",
+      "breakpoints": true
     }
   ]
 }
