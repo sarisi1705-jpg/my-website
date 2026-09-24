@@ -17,10 +17,10 @@ export default function CategoriesPage() {
     <SiteHeader active="categories" />
     <section className="inner-hero"><div className="mx-auto max-w-[1100px] px-4 py-16 text-center sm:px-8"><span><Grid2X2 /> تصفّح حسب القسم</span><h1>التصنيفات</h1><p>مساحة مخصصة لتنظيم الطابعات والأحبار وقطع الصيانة ومستلزمات الطباعة والحلول المتكاملة، بحسب احتياجك.</p></div></section>
 
-    <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-8 lg:px-12"><div className="section-heading"><div><span>كل الأقسام</span><h2>اختر القسم المناسب لك</h2></div><a target="_top" href="/products">عرض كل المنتجات <ChevronLeft /></a></div>
+    <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-8 lg:px-12"><div className="section-heading"><div><span>كل الأقسام</span><h2>اختر القسم المناسب لك</h2></div><a href="/products">عرض كل المنتجات <ChevronLeft /></a></div>
       <div className="category-grid">{productCategories.map(category => {
         const Icon = categoryIcons[category.slug] ?? Printer;
-        return <a target="_top" key={category.slug} href={category.href} className="category-card"><span><Icon /></span><div><strong>{category.name}</strong><small>{category.description}</small></div><ChevronLeft /></a>;
+        return <a key={category.slug} href={category.href} className="category-card"><span><Icon /></span><div><strong>{category.name}</strong><small>{category.description}</small></div><ChevronLeft /></a>;
       })}</div>
     </section>
 

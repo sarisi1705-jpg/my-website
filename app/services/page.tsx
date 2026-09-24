@@ -33,7 +33,7 @@ export default function ServicesPage() {
     <section className="vision-section"><div className="mx-auto max-w-[1200px] px-4 py-16 sm:px-8 lg:px-12">
       <div className="section-heading"><div><span>كيف تبدأ</span><h2>خطوات طلب الخدمة</h2></div></div>
       <div className="why-grid">{steps.map((step, index) => <article key={step.title}><span className="section-kicker">{`خطوة ${index + 1}`}</span><h3>{step.title}</h3><p>{step.description}</p></article>)}</div>
-      <div className="mx-auto mt-8 flex max-w-[1200px] justify-center"><Button asChild size="lg"><a target="_top" href="/contact"><PhoneCall />اطلب الخدمة الآن <ChevronLeft /></a></Button></div>
+      <div className="mx-auto mt-8 flex max-w-[1200px] justify-center"><Button asChild size="lg"><a href="/contact?type=service"><PhoneCall />اطلب الخدمة الآن <ChevronLeft /></a></Button></div>
     </div></section>
 
     <section className="service-strip"><div className="mx-auto grid max-w-[1440px] gap-8 px-4 py-12 sm:grid-cols-3 sm:px-8 lg:px-12"><div><PackageCheck /><span><strong>فريق مختص</strong><small>تعامل مباشر مع فنيين لديهم خبرة في مختلف العلامات التجارية</small></span></div><div><ShieldCheck /><span><strong>قطع موثوقة</strong><small>قطع صيانة أصلية أو متوافقة حسب حاجة الجهاز</small></span></div><div><Headphones /><span><strong>متابعة مستمرة</strong><small>تواصل بعد الخدمة للتأكد من استقرار الأداء</small></span></div></div></section>

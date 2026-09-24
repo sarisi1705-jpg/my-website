@@ -1,0 +1,15 @@
+# Copy to .dev.vars for local development (never commit .dev.vars).
+# Production values are set with: npx wrangler secret put <NAME>
+
+# Telegram alerts for new inquiries. Leave empty locally to skip sending.
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+
+# Cloudflare Turnstile. This is Cloudflare's always-pass test secret.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
+# Random string used to hash visitor IPs. Any long random value works locally.
+IP_HASH_SALT=local-dev-salt-change-me
+
+# Optional: override the Telegram Bot API address (used by local tests only).
+# TELEGRAM_API_BASE=http://127.0.0.1:8788

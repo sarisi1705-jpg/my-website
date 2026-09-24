@@ -19,10 +19,10 @@ export function ProductCategoryPage({ slug }: { slug: string }) {
     <section className="inner-hero"><div className="mx-auto max-w-[1100px] px-4 py-16 text-center sm:px-8"><span><PackageSearch /> قسم المنتجات</span><h1>{category.name}</h1><p>{category.description}</p></div></section>
 
     <section className="catalog-section"><div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-8 lg:px-12">
-      <div className="section-heading catalog-heading"><div><span>{category.name}</span><h2>منتجات هذا القسم</h2></div><a target="_top" href="/products">كل المنتجات <ChevronLeft /></a></div>
+      <div className="section-heading catalog-heading"><div><span>{category.name}</span><h2>منتجات هذا القسم</h2></div><a href="/products">كل المنتجات <ChevronLeft /></a></div>
 
       {items.length ? <div className="products-grid">{items.map(product => <article className="product-card" key={product.id}><div className="product-art"><span className="brand-chip">{product.brand}</span>{product.featured && <span className="featured-chip">مختار</span>}<ProductMark product={product} /></div><div className="product-body"><span className="product-category">{product.category}</span><h3>{product.name}</h3><p className="model">{product.model}</p><p>{product.description}</p><ul className="spec-list">{product.specs.map(spec => <li key={spec}><PackageCheck />{spec}</li>)}</ul></div></article>)}</div>
-        : <div className="empty-state"><PackageSearch /><h3>سيتم إضافة منتجات هذا القسم قريباً</h3><p>تواصل معنا مباشرة وسنساعدك في إيجاد الحل المناسب ضمن {category.name}.</p><Button asChild><a target="_top" href="/contact">تواصل معنا <ChevronLeft /></a></Button></div>}
+        : <div className="empty-state"><PackageSearch /><h3>سيتم إضافة منتجات هذا القسم قريباً</h3><p>تواصل معنا مباشرة وسنساعدك في إيجاد الحل المناسب ضمن {category.name}.</p><Button asChild><a href="/contact?type=quote">تواصل معنا <ChevronLeft /></a></Button></div>}
     </div></section>
 
     <ContactSection title={`استفسار عن ${category.name}؟`} />

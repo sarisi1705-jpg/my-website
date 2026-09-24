@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-website",
+  "main": "vinext/server/fetch-handler",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+
+  // Local dev and `wrangler d1 migrations apply DB --local` share
+  // .wrangler/state/v3 because both read this file from the project root.
+  // Never point d1 commands at dist/server/wrangler.json.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ssps-db",
+      "database_id": "00000000-0000-4000-8000-000000000000",
+      "migrations_dir": "drizzle"
+    }
+  ],
+
+  "r2_buckets": [
+    { "binding": "BUCKET", "bucket_name": "ssps-images" }
+  ],
+
+  // Approximate, per-location limits. Login also has DB-backed lockout.
+  "ratelimits": [
+    { "name": "RL_INQUIRY", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    { "name": "RL_LOGIN", "namespace_id": "1002", "simple": { "limit": 10, "period": 60 } }
+  ],
+
+  // Public values only. Secrets (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
+  // TURNSTILE_SECRET_KEY, IP_HASH_SALT) are set with `wrangler secret put`
+  // and locally in .dev.vars (see .dev.vars.example).
+  "vars": {
+    "PUBLIC_SITE_URL": "https://my-website.sarisi1705.workers.dev",
+    // Cloudflare's always-pass test key; replaced with the real site key.
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  }
+}

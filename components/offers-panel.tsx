@@ -14,7 +14,7 @@ export function OffersPanel() {
       {siteConfig.offers.map(offer => {
         const Icon = offerIcons[offer.icon];
         return <article className={`offer-card offer-card--${offer.icon}`} key={offer.title}>
-          <Icon aria-hidden="true" /><div><h3>{offer.title}</h3><p>{offer.description}</p><a target="_top" href={offer.href}>{offer.buttonLabel}<ChevronLeft /></a></div>
+          <Icon aria-hidden="true" /><div><h3>{offer.title}</h3><p>{offer.description}</p><a href={offer.href}>{offer.buttonLabel}<ChevronLeft /></a></div>
         </article>;
       })}
     </div>

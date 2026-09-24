@@ -80,7 +80,8 @@ async function askAI(env, userText) {
 }
 
 function isOwner(env, chatId) {
-  if (!env.OWNER_CHAT_ID) return true;
+  // Deny by default: without OWNER_CHAT_ID anyone could use the bot (and its OpenAI key).
+  if (!env.OWNER_CHAT_ID) return false;
   return String(chatId) === String(env.OWNER_CHAT_ID);
 }
 

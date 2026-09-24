@@ -23,7 +23,7 @@ export function HeroCarousel() {
       {slides.map((slide, index) => <article className="hero-slide" key={slide.image} aria-hidden={current !== index}>
         <Image src={slide.image} alt="" fill sizes="(max-width: 1024px) 100vw, 48vw" priority={index === 0} />
         <div className="hero-slide-shade" />
-        <div className="hero-slide-copy"><span>{slide.eyebrow}</span><h2>{slide.title}</h2><p>{slide.description}</p><a target="_top" href={slide.href}>{slide.buttonLabel}<ChevronLeft /></a></div>
+        <div className="hero-slide-copy"><span>{slide.eyebrow}</span><h2>{slide.title}</h2><p>{slide.description}</p><a href={slide.href}>{slide.buttonLabel}<ChevronLeft /></a></div>
       </article>)}
     </div>
     <button className="carousel-arrow carousel-arrow--previous" type="button" onClick={() => goTo(current - 1)} aria-label="الشريحة السابقة"><ChevronRight /></button>

@@ -20,14 +20,14 @@ export default function OffersPage() {
     <section className="mx-auto max-w-[1200px] px-4 py-16 sm:px-8 lg:px-12">
       <div className="section-heading"><div><span>عروض حالية</span><h2>وفّر أكثر مع SSPS</h2></div></div>
       <div className="why-grid">
-        {siteConfig.offers.map(offer => { const Icon = offerIcons[offer.icon]; return <article key={offer.title}><Icon /><h3>{offer.title}</h3><p>{offer.description}</p><Button asChild variant="outline" className="mt-3"><a target="_top" href={offer.href}>{offer.buttonLabel} <ChevronLeft /></a></Button></article>; })}
-        {extraOffers.map(offer => <article key={offer.title}><offer.icon /><h3>{offer.title}</h3><p>{offer.description}</p><Button asChild variant="outline" className="mt-3"><a target="_top" href={offer.href}>تصفّح الآن <ChevronLeft /></a></Button></article>)}
+        {siteConfig.offers.map(offer => { const Icon = offerIcons[offer.icon]; return <article key={offer.title}><Icon /><h3>{offer.title}</h3><p>{offer.description}</p><Button asChild variant="outline" className="mt-3"><a href={offer.href}>{offer.buttonLabel} <ChevronLeft /></a></Button></article>; })}
+        {extraOffers.map(offer => <article key={offer.title}><offer.icon /><h3>{offer.title}</h3><p>{offer.description}</p><Button asChild variant="outline" className="mt-3"><a href={offer.href}>تصفّح الآن <ChevronLeft /></a></Button></article>)}
       </div>
     </section>
 
     <section className="vision-section"><div className="mx-auto grid max-w-[1200px] gap-5 px-4 py-16 sm:px-8 md:grid-cols-2 lg:px-12">
-      <article><Building2 /><span>عروض الشركات</span><h2>أسعار خاصة للكميات</h2><p>نقدّم خصومات وشروط توريد مرنة للمؤسسات والشركات حسب حجم الطلب المتكرر.</p><Button asChild className="mt-4 bg-[#1258dc]"><a target="_top" href="/contact">اطلب عرض سعر <ChevronLeft /></a></Button></article>
-      <article><Wrench /><span>باقات الصيانة</span><h2>خطط صيانة سنوية</h2><p>باقات دورية تشمل الفحص والصيانة الوقائية لتقليل الأعطال وإطالة عمر الجهاز.</p><Button asChild variant="outline" className="mt-4"><a target="_top" href="/services">تعرّف على الخدمة <ChevronLeft /></a></Button></article>
+      <article><Building2 /><span>عروض الشركات</span><h2>أسعار خاصة للكميات</h2><p>نقدّم خصومات وشروط توريد مرنة للمؤسسات والشركات حسب حجم الطلب المتكرر.</p><Button asChild className="mt-4 bg-[#1258dc]"><a href="/contact?type=quote">اطلب عرض سعر <ChevronLeft /></a></Button></article>
+      <article><Wrench /><span>باقات الصيانة</span><h2>خطط صيانة سنوية</h2><p>باقات دورية تشمل الفحص والصيانة الوقائية لتقليل الأعطال وإطالة عمر الجهاز.</p><Button asChild variant="outline" className="mt-4"><a href="/services">تعرّف على الخدمة <ChevronLeft /></a></Button></article>
     </div></section>
 
     <ContactSection title="تريد معرفة أحدث العروض أولاً؟" />
