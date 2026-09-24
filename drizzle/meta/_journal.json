@@ -29,6 +29,13 @@
       "when": 1790246431500,
       "tag": "0003_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1790260246441,
+      "tag": "0004_telegram",
+      "breakpoints": true
     }
   ]
 }

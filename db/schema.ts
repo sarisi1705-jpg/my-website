@@ -136,10 +136,18 @@ export const adminUsers = sqliteTable(
     failedLogins: integer("failed_logins").notNull().default(0),
     lockedUntil: integer("locked_until"),
     lastLoginAt: integer("last_login_at"),
+    // Telegram account allowed to act for this person in the bot.
+    telegramUserId: integer("telegram_user_id"),
+    // One-time code the person sends to the bot as "/link <code>" to connect.
+    telegramLinkCode: text("telegram_link_code"),
+    telegramLinkExpires: integer("telegram_link_expires"),
     createdAt: integer("created_at").notNull(),
     updatedAt: integer("updated_at").notNull(),
   },
-  table => [uniqueIndex("admin_users_email_unique").on(table.email)],
+  table => [
+    uniqueIndex("admin_users_email_unique").on(table.email),
+    uniqueIndex("admin_users_telegram_unique").on(table.telegramUserId),
+  ],
 );
 
 export const sessions = sqliteTable(

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { ClipboardList, FolderTree, History, LayoutDashboard, LogOut, Menu, Package, Tags, UserCog, Users, X, ExternalLink } from "lucide-react";
+import { ClipboardList, ExternalLink, FolderTree, History, LayoutDashboard, LogOut, Menu, Package, Send, Tags, UserCog, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const icons = { dashboard: LayoutDashboard, inquiries: ClipboardList, products: Package, categories: FolderTree, brands: Tags, users: Users, audit: History, account: UserCog };
+const icons = { dashboard: LayoutDashboard, inquiries: ClipboardList, products: Package, categories: FolderTree, brands: Tags, users: Users, telegram: Send, audit: History, account: UserCog };
 export type NavItem = { href: string; label: string; icon: keyof typeof icons };
 
 export function AdminNav({ items, userName, roleLabel }: { items: NavItem[]; userName: string; roleLabel: string }) {

@@ -5,7 +5,7 @@ import { getPublishedProductById } from "@/lib/server/catalog";
 import { discardBody, fieldErrorsFrom, jsonData, jsonError, readJson } from "@/lib/server/http";
 import { createInquiry, markInquiryNotified } from "@/lib/server/inquiries";
 import { getClientIp, getUserAgent, hashIp } from "@/lib/server/request-meta";
-import { formatInquiryAlert, sendTelegramMessage } from "@/lib/server/telegram";
+import { sendInquiryAlert } from "@/lib/server/telegram";
 import { verifyTurnstile } from "@/lib/server/turnstile";
 import { formatInquiryReference, inquiryRequest } from "@/lib/validation/inquiry";
 
@@ -63,9 +63,10 @@ async function handle(request: Request): Promise<Response> {
 
     // Runs after the response is sent, so the visitor never waits on Telegram.
     after(async () => {
-      const sent = await sendTelegramMessage(
+      const sent = await sendInquiryAlert(
         { token: env.TELEGRAM_BOT_TOKEN, chatId: env.TELEGRAM_CHAT_ID, apiBase: env.TELEGRAM_API_BASE || undefined },
-        formatInquiryAlert(inquiry, env.PUBLIC_SITE_URL),
+        inquiry,
+        env.PUBLIC_SITE_URL,
       );
       if (sent) await markInquiryNotified(db, inquiry.id);
     });

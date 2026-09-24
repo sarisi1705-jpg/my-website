@@ -19,6 +19,7 @@ export const capabilities = [
   "products.hardDelete",
   "users.manage",
   "audit.view",
+  "settings.manage",
 ] as const;
 export type Capability = (typeof capabilities)[number];
 

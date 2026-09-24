@@ -13,3 +13,6 @@ IP_HASH_SALT=local-dev-salt-change-me
 
 # Optional: override the Telegram Bot API address (used by local tests only).
 # TELEGRAM_API_BASE=http://127.0.0.1:8788
+
+# Secret Telegram sends with each update so the bot endpoint can trust it.
+TELEGRAM_WEBHOOK_SECRET=

@@ -57,7 +57,7 @@ The commands below use the short `pnpm …` form. Prefix them with `npx pnpm@11.
 | محرر المحتوى (editor) | Products, photos, categories, brands |
 | المبيعات (sales) | Quote/contact requests: follow up, assign, add notes, export CSV |
 
-New staff get a temporary password and must choose their own at first sign-in. Every change is recorded in سجل النشاط (the audit log). To create the first owner locally:
+New staff get a temporary password and must choose their own at first sign-in. Staff can also handle requests from Telegram: each new request arrives with buttons (assign to me, quote sent, close, spam), and the bot answers `/new`, `/r 12` and `/stats`. Only staff who linked their Telegram account under حسابي can use it. Every change is recorded in سجل النشاط (the audit log). To create the first owner locally:
 
 ```bash
 pnpm db:migrate:local
@@ -76,6 +76,7 @@ All responses have the shape `{ data }` or `{ error: { code, message, fieldError
 | `GET /api/brands` | Active brands |
 | `POST /api/inquiries` | Quote, service or contact request. Protected by Turnstile, a rate limit and a honeypot field. Staff get a Telegram alert |
 | `GET /api/images/products/:file` | Product images from R2 (cached forever; keys are unique) |
+| `POST /api/telegram/webhook` | Telegram bot updates (verified with `TELEGRAM_WEBHOOK_SECRET`) |
 | `/api/admin/*` | Admin endpoints: auth, stats, inquiries (+ CSV export), products, uploads, categories, brands, users, audit. Each needs a session with the right role; changes also need a same-origin request |
 
 ## Secrets

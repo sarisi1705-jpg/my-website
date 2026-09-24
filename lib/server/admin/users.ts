@@ -6,7 +6,8 @@ import { generateTemporaryPassword, hashPassword, verifyPassword } from "@/lib/a
 import { HttpError } from "@/lib/server/http";
 import { destroyUserSessions, normalizeEmail, type SessionUser } from "@/lib/server/auth";
 
-export type StaffMember = Omit<AdminUser, "passwordHash" | "failedLogins">;
+// Never exposed: password hash, failed-login counter and pending Telegram link codes.
+export type StaffMember = Omit<AdminUser, "passwordHash" | "failedLogins" | "telegramLinkCode" | "telegramLinkExpires">;
 
 const publicColumns = {
   id: adminUsers.id,
@@ -17,6 +18,7 @@ const publicColumns = {
   isActive: adminUsers.isActive,
   lockedUntil: adminUsers.lockedUntil,
   lastLoginAt: adminUsers.lastLoginAt,
+  telegramUserId: adminUsers.telegramUserId,
   createdAt: adminUsers.createdAt,
   updatedAt: adminUsers.updatedAt,
 };
@@ -132,4 +134,49 @@ export async function changeOwnPassword(db: Db, actor: SessionUser, currentPassw
     .set({ passwordHash: await hashPassword(newPassword), mustChangePassword: false, updatedAt: now })
     .where(eq(adminUsers.id, actor.id));
   await destroyUserSessions(db, actor.id, actor.sessionId);
+}
+
+// ── Telegram account linking ───────────────────────────────────────────────
+
+export const TELEGRAM_LINK_TTL_MS = 10 * 60 * 1000;
+const LINK_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no look-alikes (0/O, 1/I)
+
+function randomLinkCode(length = 8): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(length));
+  return Array.from(bytes, byte => LINK_ALPHABET[byte % LINK_ALPHABET.length]).join("");
+}
+
+/** A one-time code the person sends to the bot as "/link <code>". Replaces any earlier code. */
+export async function createTelegramLinkCode(db: Db, userId: number, now = Date.now()): Promise<{ code: string; expiresAt: number }> {
+  const code = randomLinkCode();
+  const expiresAt = now + TELEGRAM_LINK_TTL_MS;
+  await db.update(adminUsers).set({ telegramLinkCode: code, telegramLinkExpires: expiresAt, updatedAt: now }).where(eq(adminUsers.id, userId));
+  return { code, expiresAt };
+}
+
+/**
+ * Connects a Telegram account using a code. The code is single-use and
+ * expires; a Telegram account can belong to one staff member at a time.
+ */
+export async function linkTelegramAccount(db: Db, rawCode: string, telegramUserId: number, now = Date.now()): Promise<StaffMember | null> {
+  const code = rawCode.trim().toUpperCase();
+  if (!/^[A-Z0-9]{8}$/.test(code)) return null;
+  const user = await db.select({ id: adminUsers.id, expires: adminUsers.telegramLinkExpires, isActive: adminUsers.isActive })
+    .from(adminUsers).where(eq(adminUsers.telegramLinkCode, code)).get();
+  if (!user || !user.isActive || !user.expires || user.expires < now) return null;
+  await db.batch([
+    db.update(adminUsers).set({ telegramUserId: null }).where(eq(adminUsers.telegramUserId, telegramUserId)),
+    db.update(adminUsers).set({ telegramUserId, telegramLinkCode: null, telegramLinkExpires: null, updatedAt: now }).where(eq(adminUsers.id, user.id)),
+  ]);
+  return getStaff(db, user.id);
+}
+
+export async function unlinkTelegramAccount(db: Db, userId: number, now = Date.now()): Promise<void> {
+  await db.update(adminUsers).set({ telegramUserId: null, telegramLinkCode: null, telegramLinkExpires: null, updatedAt: now }).where(eq(adminUsers.id, userId));
+}
+
+/** The active staff member behind a Telegram account, if linked. */
+export async function findStaffByTelegram(db: Db, telegramUserId: number): Promise<StaffMember | null> {
+  const user = await db.select(publicColumns).from(adminUsers).where(and(eq(adminUsers.telegramUserId, telegramUserId), eq(adminUsers.isActive, true))).get();
+  return user ?? null;
 }

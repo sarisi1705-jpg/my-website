@@ -12,12 +12,14 @@ const actionLabels: Record<string, string> = {
   "product.create": "إضافة منتج", "product.update": "تعديل منتج", "product.archive": "أرشفة منتج", "product.delete": "حذف منتج", "image.upload": "رفع صورة",
   "category.create": "إضافة تصنيف", "category.update": "تعديل تصنيف", "category.delete": "حذف تصنيف",
   "brand.create": "إضافة علامة", "brand.update": "تعديل علامة", "brand.delete": "حذف علامة",
+  "telegram.connect": "ربط البوت بالموقع", "telegram.link": "ربط حساب تيليجرام", "telegram.unlink": "فصل حساب تيليجرام",
   "user.create": "إضافة موظف", "user.update": "تعديل موظف", "user.delete": "حذف موظف", "user.password_reset": "إعادة تعيين كلمة مرور",
 };
 
 function describe(details: Record<string, unknown> | null): string {
   if (!details) return "";
   return Object.entries(details)
+    .map(([key, value]) => (key === "via" && value === "telegram" ? ["عبر", "تيليجرام"] as const : [key, value] as const))
     .map(([key, value]) => {
       if (value && typeof value === "object" && "from" in value && "to" in value) {
         const change = value as { from: unknown; to: unknown };

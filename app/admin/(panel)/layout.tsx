@@ -10,6 +10,7 @@ const nav: (NavItem & { capability?: Capability })[] = [
   { href: "/admin/categories", label: "التصنيفات", icon: "categories", capability: "catalog.manage" },
   { href: "/admin/brands", label: "العلامات التجارية", icon: "brands", capability: "catalog.manage" },
   { href: "/admin/users", label: "الموظفون", icon: "users", capability: "users.manage" },
+  { href: "/admin/telegram", label: "تيليجرام", icon: "telegram", capability: "settings.manage" },
   { href: "/admin/audit", label: "سجل النشاط", icon: "audit", capability: "audit.view" },
   { href: "/admin/account", label: "حسابي", icon: "account" },
 ];
