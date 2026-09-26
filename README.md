@@ -1,6 +1,6 @@
 # SSPS — حلول لأنظمة الحلول والطباعة
 
-Arabic (RTL) product catalog for SSPS: printers, inks and toners, maintenance parts and printing supplies, with quote and service requests.
+Arabic (RTL) product catalog for SSPS: printers, inks and toners, maintenance parts and printing supplies, with quote and service requests and an online store (cart, checkout, orders).
 
 - **Stack:** [vinext](https://github.com/cloudflare/vinext) (the Next.js App Router API on Vite), React 19, Tailwind CSS 4, shadcn/ui.
 - **Hosting:** Cloudflare Workers, using D1 (SQLite) for data and R2 for product images.
@@ -39,7 +39,7 @@ The commands below use the short `pnpm …` form. Prefix them with `npx pnpm@11.
 | What | Where |
 |---|---|
 | Products, categories, brands | The D1 database (`db/schema.ts`). The demo catalog comes from `drizzle/0002_seed.sql` |
-| Contact details, homepage stats, offers, hero slides | `lib/site-config.ts` |
+| Contact details, homepage stats, offers, hero slides, delivery fees and payment wording | `lib/site-config.ts` |
 | Colours and layout | `app/globals.css` |
 | Public pages | `app/(site)/` (the shared header and footer are in `app/(site)/layout.tsx`) |
 | API endpoints | `app/api/` |
@@ -55,7 +55,7 @@ The commands below use the short `pnpm …` form. Prefix them with `npx pnpm@11.
 |---|---|
 | المالك (owner) | Everything, including staff accounts, permanent deletes and the audit log |
 | محرر المحتوى (editor) | Products, photos, categories, brands |
-| المبيعات (sales) | Quote/contact requests: follow up, assign, add notes, export CSV |
+| المبيعات (sales) | Quote/contact requests (follow up, assign, add notes, export CSV) and online orders (status, payment, assign, notes) |
 
 New staff get a temporary password and must choose their own at first sign-in. Staff can also handle requests from Telegram: each new request arrives with buttons (assign to me, quote sent, close, spam), and the bot answers `/new`, `/r 12` and `/stats`. Only staff who linked their Telegram account under حسابي can use it. Every change is recorded in سجل النشاط (the audit log). To create the first owner locally:
 
@@ -74,10 +74,19 @@ All responses have the shape `{ data }` or `{ error: { code, message, fieldError
 | `GET /api/products/:slug` | One published product |
 | `GET /api/categories` | Active categories with product counts |
 | `GET /api/brands` | Active brands |
+| `POST /api/cart` | Prices a cart (`{ items: [{ productId, quantity }] }`) from the current catalog |
+| `POST /api/orders` | Places an order. The server re-prices the cart and refuses it (409) if a product became unavailable or the total differs from what the shopper saw. Turnstile, a rate limit and a honeypot field, like inquiries. Staff get a Telegram alert |
 | `POST /api/inquiries` | Quote, service or contact request. Protected by Turnstile, a rate limit and a honeypot field. Staff get a Telegram alert |
 | `GET /api/images/products/:file` | Product images from R2 (cached forever; keys are unique) |
 | `POST /api/telegram/webhook` | Telegram bot updates (verified with `TELEGRAM_WEBHOOK_SECRET`) |
-| `/api/admin/*` | Admin endpoints: auth, stats, inquiries (+ CSV export), products, uploads, categories, brands, users, audit. Each needs a session with the right role; changes also need a same-origin request |
+| `/api/admin/*` | Admin endpoints: auth, stats, orders, inquiries (+ CSV export), products, uploads, categories, brands, users, audit. Each needs a session with the right role; changes also need a same-origin request |
+
+## Online store
+
+- A product can be bought online when it is published and has a price in ILS. Products without a price keep "السعر عند الطلب" and the quote form. The demo catalog has no prices, so set them under المنتجات in the admin panel.
+- The cart lives in the visitor's browser (`localStorage`, product ids and quantities only). Prices always come from the server.
+- Checkout: pickup or delivery (West Bank, Jerusalem, 48 areas), paid cash on delivery or by bank transfer. Fees and wording are in `siteConfig.store` (`lib/site-config.ts`). There is no card payment yet.
+- Orders are under طلبات الشراء in the admin panel (owner and sales). Each order keeps a copy of its lines and prices, so later catalog edits don't change it. Orders can't be deleted; set them to ملغى (cancelled) instead.
 
 ## Secrets
 

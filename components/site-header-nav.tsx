@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronDown, ChevronLeft, Menu, Phone, Printer, X } from "lucide-react";
+import { CartLink } from "@/components/cart-link";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/site-config";
 
@@ -63,7 +64,8 @@ function ProductsMenu({ categories, mobile = false, active = false, onNavigate }
 
 export function SiteHeaderNav({ categories }: { categories: HeaderCategory[] }) {
   const [mobileMenu, setMobileMenu] = useState(false);
-  const resolvedActive = activePage(usePathname());
+  const pathname = usePathname();
+  const resolvedActive = activePage(pathname);
 
   return <header className="site-header sticky top-0 z-40 border-b border-[#dfe7f2] bg-white/92 backdrop-blur-xl">
     <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between px-4 sm:px-8 lg:px-12">
@@ -74,6 +76,7 @@ export function SiteHeaderNav({ categories }: { categories: HeaderCategory[] }) 
         {navigation.filter(item => item.key !== "home").map(item => <a key={item.key} className={`nav-link${resolvedActive === item.key ? " nav-link--active" : ""}`} href={item.href} aria-current={resolvedActive === item.key ? "page" : undefined}>{item.label}</a>)}
       </nav>
       <div className="header-actions">
+        <CartLink active={pathname === "/cart" || pathname === "/checkout"} />
         <a className="header-phone" href={siteConfig.contact.phoneHref}><Phone aria-hidden="true" /><span>{siteConfig.contact.phone}</span></a>
         <Button asChild className="header-quote hidden rounded-xl bg-[#1258dc] px-4 2xl:inline-flex"><a href="/contact?type=quote">اطلب عرض السعر <ChevronLeft /></a></Button>
         <Button variant="outline" size="icon" className="rounded-xl lg:hidden" aria-label={mobileMenu ? "إغلاق القائمة" : "فتح القائمة"} aria-expanded={mobileMenu} onClick={() => setMobileMenu(current => !current)}>{mobileMenu ? <X /> : <Menu />}</Button>

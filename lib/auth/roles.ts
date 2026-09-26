@@ -15,6 +15,8 @@ export const capabilities = [
   "inquiries.manage",
   "inquiries.export",
   "inquiries.delete",
+  "orders.view",
+  "orders.manage",
   "catalog.manage",
   "products.hardDelete",
   "users.manage",
@@ -26,7 +28,7 @@ export type Capability = (typeof capabilities)[number];
 const grants: Record<AdminRole, readonly Capability[]> = {
   owner: capabilities,
   editor: ["dashboard.view", "catalog.manage"],
-  sales: ["dashboard.view", "inquiries.view", "inquiries.manage", "inquiries.export"],
+  sales: ["dashboard.view", "inquiries.view", "inquiries.manage", "inquiries.export", "orders.view", "orders.manage"],
 };
 
 export function can(role: AdminRole, capability: Capability): boolean {

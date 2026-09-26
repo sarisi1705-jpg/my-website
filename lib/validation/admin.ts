@@ -3,6 +3,7 @@ import { adminRoles } from "@/lib/auth/roles";
 import { MIN_PASSWORD_LENGTH } from "@/lib/auth/password";
 import { iconKeys, productStatuses } from "@/lib/catalog-constants";
 import { inquiryStatuses, inquiryTypes } from "@/lib/inquiry-constants";
+import { orderStatuses, paymentStatuses } from "@/lib/order-constants";
 import { SLUG_PATTERN } from "@/lib/slug";
 import { collapseWhitespace, toLatinDigits } from "@/lib/text";
 
@@ -135,6 +136,27 @@ export const inquiryListQuery = z.object({
   page: pageParam,
 });
 export type InquiryListQuery = z.output<typeof inquiryListQuery>;
+
+// ── Orders ─────────────────────────────────────────────────────────────────
+
+export const orderUpdateInput = z
+  .object({
+    status: z.enum(orderStatuses).optional(),
+    paymentStatus: z.enum(paymentStatuses).optional(),
+    assignedTo: z.number().int().positive().nullable().optional(),
+    internalNotes: z.string().max(5000, "الملاحظات طويلة جداً").optional(),
+  })
+  .refine(data => Object.keys(data).length > 0, { message: "لا توجد تغييرات" });
+
+export const orderListQuery = z.object({
+  status: optionalEnum(orderStatuses),
+  paymentStatus: optionalEnum(paymentStatuses),
+  q: searchParam,
+  from: dateParam,
+  to: dateParam,
+  page: pageParam,
+});
+export type OrderListQuery = z.output<typeof orderListQuery>;
 
 export const adminProductListQuery = z.object({
   q: searchParam,

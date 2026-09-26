@@ -44,7 +44,7 @@ describe("roles", () => {
   const expected: Record<string, string[]> = {
     owner: [...capabilities],
     editor: ["dashboard.view", "catalog.manage"],
-    sales: ["dashboard.view", "inquiries.view", "inquiries.manage", "inquiries.export"],
+    sales: ["dashboard.view", "inquiries.view", "inquiries.manage", "inquiries.export", "orders.view", "orders.manage"],
   };
   for (const role of adminRoles) {
     it(`${role} has exactly the planned capabilities`, () => {

@@ -1,7 +1,9 @@
 import { ChevronLeft } from "lucide-react";
+import { AddToCartButton } from "@/components/add-to-cart";
 import { Button } from "@/components/ui/button";
 import { PriceTag } from "@/components/price-tag";
 import { ProductMark } from "@/components/product-mark";
+import { isPurchasable } from "@/lib/catalog-constants";
 import { productImageUrl } from "@/lib/images";
 import type { CatalogProduct } from "@/lib/server/catalog";
 
@@ -19,7 +21,10 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
       <p className="model" dir="ltr">{product.model}</p>
       <p>{product.description}</p>
       <PriceTag priceMinor={product.priceMinor} currency={product.currency} />
-      <Button asChild variant="outline"><a href={href} aria-label={`عرض تفاصيل ${product.name}`}>عرض التفاصيل <ChevronLeft /></a></Button>
+      <div className="product-card-actions">
+        <Button asChild variant="outline"><a href={href} aria-label={`عرض تفاصيل ${product.name}`}>عرض التفاصيل <ChevronLeft /></a></Button>
+        {isPurchasable(product) && <AddToCartButton productId={product.id} name={product.name} />}
+      </div>
     </div>
   </article>;
 }

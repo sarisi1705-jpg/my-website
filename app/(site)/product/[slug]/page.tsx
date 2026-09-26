@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { env } from "cloudflare:workers";
 import { notFound } from "next/navigation";
 import { ChevronLeft, MessageCircle, PackageCheck, Send } from "lucide-react";
+import { AddToCart } from "@/components/add-to-cart";
 import { Button } from "@/components/ui/button";
 import { InquiryForm } from "@/components/inquiry-form";
 import { PriceTag } from "@/components/price-tag";
@@ -9,6 +10,7 @@ import { ProductCard } from "@/components/product-card";
 import { ProductMark } from "@/components/product-mark";
 import { getDb } from "@/db";
 import { productImageUrl } from "@/lib/images";
+import { isPurchasable } from "@/lib/catalog-constants";
 import { getProductBySlug, getRelatedProducts } from "@/lib/server/catalog";
 import { siteConfig } from "@/lib/site-config";
 
@@ -32,7 +34,8 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
   const related = await getRelatedProducts(db, product);
   const imageUrl = productImageUrl(product.imageKey);
-  const whatsappText = `مرحباً، أرغب بالاستفسار عن ${product.name} (${product.brand.name} ${product.model})`;
+  const purchasable = isPurchasable(product);
+  const whatsappText =`مرحباً، أرغب بالاستفسار عن ${product.name} (${product.brand.name} ${product.model})`;
 
   // Structured data so search engines can show the product properly.
   const jsonLd = {
@@ -76,8 +79,9 @@ export default async function ProductPage({ params }: Props) {
             <h2 className="detail-title">المواصفات الأساسية</h2>
             <ul className="spec-list">{product.specs.map(spec => <li key={spec}><PackageCheck />{spec}</li>)}</ul>
           </>}
+          {purchasable && <AddToCart productId={product.id} name={product.name} />}
           <div className="product-detail-actions">
-            <Button asChild size="lg" className="rounded-xl bg-[#1258dc]"><a href="#quote"><Send />اطلب عرض سعر</a></Button>
+            <Button asChild size="lg" variant={purchasable ? "outline" : "default"} className={`rounded-xl${purchasable ? "" : " bg-[#1258dc]"}`}><a href="#quote"><Send />{purchasable ? "سعر خاص للكميات" : "اطلب عرض سعر"}</a></Button>
             <Button asChild size="lg" variant="outline" className="rounded-xl"><a href={`${siteConfig.contact.whatsappHref}?text=${encodeURIComponent(whatsappText)}`} target="_blank" rel="noreferrer"><MessageCircle />استفسر عبر WhatsApp</a></Button>
           </div>
         </div>

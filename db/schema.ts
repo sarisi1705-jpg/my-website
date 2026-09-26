@@ -3,10 +3,12 @@ import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqli
 import { adminRoles } from "../lib/auth/roles";
 import { DEFAULT_CURRENCY, iconKeys, productStatuses } from "../lib/catalog-constants";
 import { contactMethods, inquiryStatuses, inquiryTypes } from "../lib/inquiry-constants";
+import { deliveryZones, orderStatuses, paymentMethods, paymentStatuses } from "../lib/order-constants";
 
 export type { AdminRole } from "../lib/auth/roles";
 export type { IconKey, ProductStatus } from "../lib/catalog-constants";
 export type { ContactMethod, InquiryStatus, InquiryType } from "../lib/inquiry-constants";
+export type { DeliveryZone, OrderStatus, PaymentMethod, PaymentStatus } from "../lib/order-constants";
 
 // Timestamps are integer milliseconds set in app code (Date.now()).
 
@@ -119,6 +121,57 @@ export type Category = typeof categories.$inferSelect;
 export type Brand = typeof brands.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
+
+// ── Orders ─────────────────────────────────────────────────────────────────
+
+/** One line of an order, frozen at checkout so later catalog edits don't change it. */
+export type OrderItem = {
+  productId: number;
+  slug: string;
+  name: string;
+  brand: string;
+  model: string;
+  unitPriceMinor: number;
+  quantity: number;
+  lineTotalMinor: number;
+};
+
+export const orders = sqliteTable(
+  "orders",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    status: text("status", { enum: orderStatuses }).notNull().default("new"),
+    paymentMethod: text("payment_method", { enum: paymentMethods }).notNull(),
+    paymentStatus: text("payment_status", { enum: paymentStatuses }).notNull().default("unpaid"),
+    name: text("name").notNull(),
+    phone: text("phone").notNull(),
+    email: text("email"),
+    deliveryZone: text("delivery_zone", { enum: deliveryZones }).notNull(),
+    city: text("city").notNull().default(""),
+    address: text("address").notNull().default(""),
+    customerNotes: text("customer_notes").notNull().default(""),
+    // Lines live in the order row (not a separate table) so an order is written
+    // in one INSERT: D1 has no transactions, and a half-written order is worse.
+    items: text("items", { mode: "json" }).$type<OrderItem[]>().notNull(),
+    subtotalMinor: integer("subtotal_minor").notNull(),
+    deliveryFeeMinor: integer("delivery_fee_minor").notNull(),
+    totalMinor: integer("total_minor").notNull(),
+    currency: text("currency").notNull().default(DEFAULT_CURRENCY),
+    assignedTo: integer("assigned_to"),
+    internalNotes: text("internal_notes").notNull().default(""),
+    ipHash: text("ip_hash"),
+    userAgent: text("user_agent"),
+    notifiedAt: integer("notified_at"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  table => [
+    index("orders_status_created_idx").on(table.status, table.createdAt),
+    index("orders_created_idx").on(table.createdAt),
+  ],
+);
+
+export type Order = typeof orders.$inferSelect;
 
 // ── Staff accounts ─────────────────────────────────────────────────────────
 

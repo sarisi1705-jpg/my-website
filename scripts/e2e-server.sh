@@ -14,6 +14,9 @@ CI=1 npx wrangler d1 migrations apply DB --local --persist-to "$state_dir"
 # Test staff accounts (owner/editor/sales) for the admin tests.
 npx tsx tests/e2e/seed-users.ts > "$state_dir/users.sql"
 npx wrangler d1 execute DB --local --persist-to "$state_dir" --file "$state_dir/users.sql"
+# The demo catalog has no prices; give two products one so the store can be tested.
+npx wrangler d1 execute DB --local --persist-to "$state_dir" --command \
+  "UPDATE products SET price_minor = 8950 WHERE slug = 'hp-w2031a'; UPDATE products SET price_minor = 4500 WHERE slug = 'navigator-a4-80-gsm';"
 node scripts/run-framework.mjs build
 exec npx wrangler dev --config dist/server/wrangler.json --local \
   --persist-to "$state_dir" --env-file "$PWD/tests/e2e/e2e.vars" \

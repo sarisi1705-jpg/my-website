@@ -8,3 +8,8 @@ export type IconKey = (typeof iconKeys)[number];
 export type ProductStatus = (typeof productStatuses)[number];
 
 export const DEFAULT_CURRENCY = "ILS";
+
+/** Can be bought online: has a price, in the store currency. Others stay "price on request". */
+export function isPurchasable(product: { priceMinor: number | null; currency: string }): boolean {
+  return product.priceMinor !== null && product.currency === DEFAULT_CURRENCY;
+}

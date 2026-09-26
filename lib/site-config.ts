@@ -1,3 +1,5 @@
+import type { DeliveryZone, PaymentMethod } from "./order-constants";
+
 export type SiteStat = {
   value: string;
   label: string;
@@ -18,6 +20,13 @@ export type HeroSlide = {
   description: string;
   buttonLabel: string;
   href: string;
+};
+
+export type DeliveryOption = {
+  label: string;
+  /** Fee in agorot (₪1 = 100). */
+  feeMinor: number;
+  note: string;
 };
 
 export const siteConfig = {
@@ -88,4 +97,18 @@ export const siteConfig = {
       href: "/offers",
     },
   ] satisfies HeroSlide[],
+
+  store: {
+    // TODO: تأكيد رسوم التوصيل الفعلية قبل تفعيل المتجر.
+    deliveryZones: {
+      pickup: { label: "استلام من المعرض", feeMinor: 0, note: "نتواصل معك عندما يصبح الطلب جاهزاً للاستلام." },
+      west_bank: { label: "توصيل — الضفة الغربية", feeMinor: 2000, note: "خلال 1–3 أيام عمل." },
+      jerusalem: { label: "توصيل — القدس", feeMinor: 3000, note: "خلال 2–4 أيام عمل." },
+      inside: { label: "توصيل — الداخل", feeMinor: 7000, note: "خلال 3–5 أيام عمل." },
+    } satisfies Record<DeliveryZone, DeliveryOption>,
+    paymentMethods: {
+      cod: "ادفع نقداً عند استلام الطلب.",
+      bank_transfer: "نرسل لك تفاصيل الحساب البنكي بعد تأكيد الطلب.",
+    } satisfies Record<PaymentMethod, string>,
+  },
 };

@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, ne, sql, type SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, ne, sql, type SQL } from "drizzle-orm";
 import { brands, categories, products } from "@/db/schema";
 import type { Db } from "@/db/types";
 import type { IconKey } from "@/lib/catalog-constants";
@@ -175,6 +175,13 @@ export async function getProductBySlug(db: Db, slug: string): Promise<CatalogPro
 export async function getPublishedProductById(db: Db, id: number): Promise<CatalogProduct | undefined> {
   const row = await publicProducts(db).where(and(publiclyVisible, eq(products.id, id))).get();
   return row && toCatalogProduct(row);
+}
+
+/** Published products among the given ids, in no particular order. Missing or hidden ids are left out. */
+export async function getPublishedProductsByIds(db: Db, ids: number[]): Promise<CatalogProduct[]> {
+  if (!ids.length) return [];
+  const rows = await publicProducts(db).where(and(publiclyVisible, inArray(products.id, ids)));
+  return rows.map(toCatalogProduct);
 }
 
 export async function getRelatedProducts(db: Db, product: CatalogProduct, limit = 4): Promise<CatalogProduct[]> {

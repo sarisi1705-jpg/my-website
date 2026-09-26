@@ -1,6 +1,10 @@
-import type { Inquiry } from "@/db/schema";
+import type { Inquiry, Order } from "@/db/schema";
+import { formatPrice } from "@/lib/format";
 import { inquiryStatusLabels } from "@/lib/inquiry-constants";
+import { paymentMethodLabels } from "@/lib/order-constants";
+import { siteConfig } from "@/lib/site-config";
 import { contactMethodLabels, formatInquiryReference, inquiryTypeLabels } from "@/lib/validation/inquiry";
+import { formatOrderReference } from "@/lib/validation/order";
 
 const TELEGRAM_MESSAGE_LIMIT = 4096;
 
@@ -105,4 +109,35 @@ export async function sendTelegramMessage(
 /** A new-request alert with its action buttons. */
 export function sendInquiryAlert(config: TelegramConfig, inquiry: InquiryCardInput, siteUrl: string, fetchImpl: typeof fetch = fetch): Promise<boolean> {
   return sendTelegramMessage(config, formatInquiryAlert(inquiry, siteUrl), fetchImpl, { reply_markup: inquiryKeyboard(inquiry, siteUrl) });
+}
+
+// ── Orders ─────────────────────────────────────────────────────────────────
+
+/** A new online order as staff see it in Telegram. Plain text, so shopper input needs no escaping. */
+export function formatOrderAlert(order: Order, siteUrl: string): string {
+  const price = (minor: number) => formatPrice(minor, order.currency);
+  const lines = [
+    `🛒 طلب شراء جديد — ${formatOrderReference(order.id)}`,
+    `الاسم: ${order.name}`,
+    `الهاتف: ${order.phone}`,
+  ];
+  if (order.email) lines.push(`البريد: ${order.email}`);
+  lines.push(`الاستلام: ${siteConfig.store.deliveryZones[order.deliveryZone].label}`);
+  if (order.city || order.address) lines.push(`العنوان: ${[order.city, order.address].filter(Boolean).join(" — ")}`);
+  lines.push(`الدفع: ${paymentMethodLabels[order.paymentMethod]}`, "", "المنتجات:");
+  for (const item of order.items) lines.push(`• ${item.name} (${item.brand} ${item.model}) × ${item.quantity} = ${price(item.lineTotalMinor)}`);
+  lines.push("", `المجموع: ${price(order.subtotalMinor)}`, `التوصيل: ${price(order.deliveryFeeMinor)}`, `الإجمالي: ${price(order.totalMinor)}`);
+  if (order.customerNotes) lines.push("", `ملاحظات العميل: ${order.customerNotes}`);
+  lines.push(`فتح في لوحة التحكم: ${siteUrl.replace(/\/$/, "")}/admin/orders/${order.id}`);
+
+  const text = lines.join("\n");
+  return text.length > TELEGRAM_MESSAGE_LIMIT ? `${text.slice(0, TELEGRAM_MESSAGE_LIMIT - 1)}…` : text;
+}
+
+/** A new-order alert. Orders are handled in the admin panel, so the only button opens it there. */
+export function sendOrderAlert(config: TelegramConfig, order: Order, siteUrl: string, fetchImpl: typeof fetch = fetch): Promise<boolean> {
+  const extra = siteUrl.startsWith("https://")
+    ? { reply_markup: { inline_keyboard: [[{ text: "فتح في لوحة التحكم", url: `${siteUrl.replace(/\/$/, "")}/admin/orders/${order.id}` }]] } }
+    : {};
+  return sendTelegramMessage(config, formatOrderAlert(order, siteUrl), fetchImpl, extra);
 }

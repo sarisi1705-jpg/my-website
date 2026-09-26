@@ -5,6 +5,7 @@ import { currentAdmin } from "@/lib/server/admin-page";
 
 const nav: (NavItem & { capability?: Capability })[] = [
   { href: "/admin", label: "الرئيسية", icon: "dashboard", capability: "dashboard.view" },
+  { href: "/admin/orders", label: "طلبات الشراء", icon: "orders", capability: "orders.view" },
   { href: "/admin/inquiries", label: "الطلبات", icon: "inquiries", capability: "inquiries.view" },
   { href: "/admin/products", label: "المنتجات", icon: "products", capability: "catalog.manage" },
   { href: "/admin/categories", label: "التصنيفات", icon: "categories", capability: "catalog.manage" },
